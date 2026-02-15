@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? ❤️</title>
+    <style>
+        :root {
+            --pink: #ff4d6d;
+            --light-pink: #ffb3c1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff0f3;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        /* --- Floating Hearts --- */
+        .heart-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- Page 1: The Ask --- */
+        #page1, #page2 {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 { color: var(--pink); font-size: 2.5rem; }
+
+        .btn-container {
+            margin-top: 20px;
+            position: relative;
+            height: 100px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #yesBtn { background-color: var(--pink); color: white; margin-right: 10px; }
+        #noBtn { background-color: #ccc; color: #333; position: absolute; }
+
+        /* --- Page 2: The Success --- */
+        .hidden { display: none !important; }
+
+        .beating-heart {
+            font-size: 80px;
+            cursor: pointer;
+            animation: beat 0.8s infinite;
+            display: inline-block;
+        }
+
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- Gallery Row --- */
+        .gallery-container {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+            white-space: nowrap;
+        }
+
+        .gallery-track {
+            display: inline-block;
+            animation: scroll 15s linear infinite;
+        }
+
+        .gallery-track img {
+            height: 150px;
+            margin: 0 10px;
+            border-radius: 10px;
+            border: 3px solid var(--pink);
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="your-music-file.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="heart-bg" id="heartBg"></div>
+
+    <div id="page1">
+        <h1>Will you be my Valentine? 🌹</h1>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="celebrate()">YES</button>
+            <button id="noBtn" onmouseover="moveNo()">No</button>
+        </div>
+    </div>
+
+    <div id="page2" class="hidden">
+        <h1>I knew you'd choose yes! 💖</h1>
+        <div class="beating-heart" onclick="showGallery()">💓</div>
+        <p>Click the heart to enter...</p>
+        
+        <div id="gallery" class="hidden">
+            <div class="gallery-container">
+                <div class="gallery-track">
+                    <img src="https://via.placeholder.com/150/ff4d6d/ffffff?text=Us+1" alt="Pic">
+                    <img src="https://via.placeholder.com/150/ff4d6d/ffffff?text=Us+2" alt="Pic">
+                    <img src="https://via.placeholder.com/150/ff4d6d/ffffff?text=Us+3" alt="Pic">
+                    <img src="https://via.placeholder.com/150/ff4d6d/ffffff?text=Us+4" alt="Pic">
+                    <img src="https://via.placeholder.com/150/ff4d6d/ffffff?text=Us+1" alt="Pic">
+                    <img src="https://via.placeholder.com/150/ff4d6d/ffffff?text=Us+2" alt="Pic">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Floating Hearts Logic
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.transition = 'transform 5s linear, opacity 5s';
+            document.getElementById('heartBg').appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 300);
+
+        // 2. Runaway "No" Button
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        // 3. Page Transitions
+        function celebrate() {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+            document.getElementById('bgMusic').play().catch(() => {
+                console.log("Music auto-play blocked; click the heart to play!");
+            });
+        }
+
+        function showGallery() {
+            document.getElementById('gallery').classList.toggle('hidden');
+            // Play music if it was blocked by browser
+            document.getElementById('bgMusic').play();
+        }
+    </script>
+</body>
+</html>
